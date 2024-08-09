@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import styles from '../styles/HomePage.module.css'; // Import CSS module
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -28,18 +30,39 @@ const LoginPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <div className={styles.container}>
+      <nav className={styles.nav}>
+        <Link href="/">Home</Link>
+        <Link href="/register">Register</Link>
+      </nav>
+      <div className={styles.content}>
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={styles.input} // Apply wider input box style
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className={styles.input} // Apply wider input box style
+            />
+          </div>
+          <button type="submit" className={styles.button}>Login</button>
+          {message && <p>{message}</p>}
+        </form>
       </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </div>
-      <button type="submit">Login</button>
-      {message && <p>{message}</p>}
-    </form>
+    </div>
   );
 };
 

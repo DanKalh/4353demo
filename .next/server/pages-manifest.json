@@ -2,12 +2,14 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/events": "pages/events.js",
+  "/api/events": "pages/api/events.js",
   "/profile": "pages/profile.js",
   "/volunteer-matching": "pages/volunteer-matching.js",
-  "/event-management": "pages/event-management.js",
-  "/api/events": "pages/api/events.js",
-  "/api/matching": "pages/api/matching.js",
   "/api/users": "pages/api/users.js",
-  "/events": "pages/events.js",
-  "/reports": "pages/reports.js"
+  "/event-management": "pages/event-management.js",
+  "/reports": "pages/reports.js",
+  "/api/matching": "pages/api/matching.js",
+  "/api/reports/generate": "pages/api/reports/generate.js"
 }

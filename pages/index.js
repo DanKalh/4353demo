@@ -9,8 +9,8 @@ const HomePage = () => {
       <nav className={styles.nav}>
         <Link href="/login">Login</Link>
         <Link href="/register">Register</Link>
-        <Link href="/profile">Profile</Link>
-        <Link href="/event-management">Event Management</Link>
+        {/* <Link href="/profile">Profile</Link>
+        <Link href="/event-management">Event Management</Link> */}
       </nav>
       <div className={styles.content}>
         <h1 className={styles.heading}>Welcome to the Volunteer Management System</h1>
