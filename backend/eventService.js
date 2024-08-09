@@ -1,14 +1,24 @@
-import { query } from '../lib/db';
+//backend/eventService.js:
 
+import prisma from '../lib/prisma';
+
+// Get all events
 export const getEvents = async () => {
-  const result = await query('SELECT * FROM events');
-  return result.rows;
+  const events = await prisma.eventDetails.findMany();
+  return events;
 };
 
+// Add a new event
 export const addEvent = async (event) => {
-  const result = await query(
-    'INSERT INTO events (event_name, event_description, location, required_skills, urgency, event_date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-    [event.event_name, event.event_description, event.location, event.required_skills, event.urgency, event.event_date]
-  );
-  return result.rows[0];
+  const newEvent = await prisma.eventDetails.create({
+    data: {
+      eventName: event.event_name,
+      eventDescription: event.event_description,
+      location: event.location,
+      requiredSkills: event.required_skills, // Assuming this is passed as a JSON array or object
+      urgency: event.urgency,
+      eventDate: new Date(event.event_date), // Ensure the date is properly formatted
+    },
+  });
+  return newEvent;
 };

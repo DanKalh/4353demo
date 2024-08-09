@@ -1,12 +1,17 @@
-// backend/matchingService.js
-import pool from '../lib/db';
+//backend/matchingService.js:
 
+import prisma from '../lib/prisma';
+
+// Match a volunteer to an event
 const matchVolunteerToEvent = async (volunteerId, eventId) => {
-  const result = await pool.query(
-    'INSERT INTO volunteer_history (volunteer_id, event_id) VALUES ($1, $2) RETURNING *',
-    [volunteerId, eventId]
-  );
-  return result.rows[0];
+  const matchedVolunteer = await prisma.volunteerHistory.create({
+    data: {
+      volunteerId: volunteerId,
+      eventId: eventId,
+      participationStatus: 'matched', // Assuming you want to set an initial status
+    },
+  });
+  return matchedVolunteer;
 };
 
-export { matchVolunteerToEvent };
+export { matchVolunteerToEvent }; 

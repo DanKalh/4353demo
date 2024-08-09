@@ -1,14 +1,20 @@
-import { query } from '../lib/db';
+//backend/notificationService.js:
 
+import prisma from '../lib/prisma';
+
+// Get all notifications
 export const getNotifications = async () => {
-  const result = await query('SELECT * FROM notifications');
-  return result.rows;
+  const notifications = await prisma.notification.findMany();
+  return notifications;
 };
 
+// Add a new notification
 export const addNotification = async (notification) => {
-  const result = await query(
-    'INSERT INTO notifications (volunteer_id, message) VALUES ($1, $2) RETURNING *',
-    [notification.volunteer_id, notification.message]
-  );
-  return result.rows[0];
+  const newNotification = await prisma.notification.create({
+    data: {
+      volunteerId: notification.volunteer_id,
+      message: notification.message,
+    },
+  });
+  return newNotification;
 };
