@@ -3,6 +3,9 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/api/users": "pages/api/users.js",
-  "/profile": "pages/profile.js"
+  "/profile": "pages/profile.js",
+  "/events": "pages/events.js",
+  "/api/events": "pages/api/events.js",
+  "/reports": "pages/reports.js",
+  "/api/users": "pages/api/users.js"
 }
