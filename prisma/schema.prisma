@@ -1,0 +1,59 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserCredentials {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  profile  UserProfile?
+}
+
+model UserProfile {
+  userId       Int       @id
+  fullName     String    @db.VarChar(50)
+  address1     String    @db.VarChar(100)
+  address2     String?   @db.VarChar(100)
+  city         String    @db.VarChar(100)
+  state        String    @db.Char(2)
+  zipCode      String    @db.VarChar(9)
+  skills       Json
+  preferences  String?
+  availability Json
+  user         UserCredentials @relation(fields: [userId], references: [id])
+}
+
+model EventDetails {
+  id               Int      @id @default(autoincrement())
+  eventName        String
+  eventDescription String
+  location         String
+  requiredSkills   Json
+  urgency          String
+  eventDate        DateTime
+}
+
+model VolunteerHistory {
+  id                   Int      @id @default(autoincrement())
+  volunteerId          Int
+  eventId              Int
+  participationStatus  String
+}
+
+model Notifications {
+  id          Int    @id @default(autoincrement())
+  volunteerId Int
+  message     String
+}
+
+model States {
+  code String @id @db.Char(2)
+  name String
+}
