@@ -1,40 +1,29 @@
 // components/LoginForm.js
-import { useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
+      const response = await axios.post('/api/auth/login', { email, password });
+      if (response.status === 200) {
+        router.push('/profile'); // Redirect to profile or any protected page
       }
-
-      setMessage('Login successful');
-      // Save the token to local storage or use it as needed
-      localStorage.setItem('token', data.token);
-      router.push('/profile'); // Redirect to the profile page
     } catch (error) {
-      setMessage(error.message);
+      console.error('Error logging in:', error);
+      setError('Invalid email or password');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
       <div>
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -43,8 +32,8 @@ const LoginForm = () => {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       </div>
+      {error && <p>{error}</p>}
       <button type="submit">Login</button>
-      {message && <p>{message}</p>}
     </form>
   );
 };

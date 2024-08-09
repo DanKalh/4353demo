@@ -1,12 +1,10 @@
-// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model UserCredentials {
@@ -17,17 +15,18 @@ model UserCredentials {
 }
 
 model UserProfile {
-  userId       Int       @id
+  userId       Int       @id @default(autoincrement())
   fullName     String    @db.VarChar(50)
   address1     String    @db.VarChar(100)
   address2     String?   @db.VarChar(100)
   city         String    @db.VarChar(100)
   state        String    @db.Char(2)
   zipCode      String    @db.VarChar(9)
-  skills       Json
+  skills       String[]
   preferences  String?
-  availability Json
+  availability DateTime[]
   user         UserCredentials @relation(fields: [userId], references: [id])
+  volunteerHistory VolunteerHistory[]
 }
 
 model Event {
@@ -59,16 +58,18 @@ model Volunteer {
   zipCode     String
   skills      String[]
   preferences String?
-  availability String?
+  availability DateTime[]
   history     VolunteerHistory[]
 }
 
 model VolunteerHistory {
   id               Int      @id @default(autoincrement())
   volunteerId      Int
+  userProfileId    Int?
   eventId          Int
   participationStatus String
-  volunteer        Volunteer @relation(fields: [volunteerId], references: [id])
+  volunteer        Volunteer? @relation(fields: [volunteerId], references: [id])
+  userProfile      UserProfile? @relation(fields: [userProfileId], references: [userId])
   event            Event     @relation(fields: [eventId], references: [id])
 }
 

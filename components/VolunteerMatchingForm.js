@@ -1,4 +1,3 @@
-// components/VolunteerMatchingForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../styles/VolunteerMatchingForm.module.css';
@@ -14,7 +13,12 @@ const VolunteerMatchingForm = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       try {
-        const response = await axios.get('/api/volunteers');
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/volunteers', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setVolunteers(response.data);
       } catch (error) {
         console.error('Error fetching volunteers:', error);
@@ -23,7 +27,12 @@ const VolunteerMatchingForm = () => {
 
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('/api/events');
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/events', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setEvents(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -50,13 +59,23 @@ const VolunteerMatchingForm = () => {
     e.preventDefault();
     if (validate()) {
       try {
-        const response = await axios.post('/api/match', {
-          volunteerId: selectedVolunteer,
-          eventId: matchedEvent,
-        });
-        setNotifications([...notifications, response.data.message]);
+        const token = localStorage.getItem('token');
+        const response = await axios.post(
+          '/api/matching',
+          {
+            eventId: matchedEvent,
+            volunteerId: selectedVolunteer,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setNotifications([...notifications, 'Volunteer matched successfully']);
       } catch (error) {
         console.error('Error matching volunteer to event:', error);
+        setNotifications([...notifications, 'Error matching volunteer to event']);
       }
     }
   };
@@ -73,7 +92,7 @@ const VolunteerMatchingForm = () => {
           <option value="">Select Volunteer</option>
           {volunteers.map((volunteer) => (
             <option key={volunteer.id} value={volunteer.id}>
-              {volunteer.name}
+              {volunteer.fullName}
             </option>
           ))}
         </select>
@@ -89,7 +108,7 @@ const VolunteerMatchingForm = () => {
           <option value="">Select Event</option>
           {events.map((event) => (
             <option key={event.id} value={event.id}>
-              {event.name}
+              {event.eventName}
             </option>
           ))}
         </select>

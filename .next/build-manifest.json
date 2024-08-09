@@ -12,11 +12,6 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/index.js"
-    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -37,15 +32,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/events.js"
     ],
-    "/history": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/history.js"
-    ],
     "/profile": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/profile.js"
+    ],
+    "/reports": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/reports.js"
     ],
     "/volunteer-matching": [
       "static/chunks/webpack.js",

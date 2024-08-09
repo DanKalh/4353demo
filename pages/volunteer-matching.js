@@ -41,11 +41,12 @@ const VolunteerMatchingPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ eventId: selectedEvent }),
+        body: JSON.stringify({ eventId: parseInt(selectedEvent) }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch matching volunteers');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch matching volunteers');
       }
 
       const data = await response.json();

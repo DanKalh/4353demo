@@ -1,38 +1,43 @@
-// backend/matchingService.js
 import prisma from '../lib/prisma';
 
-// Match a volunteer to an event
-const matchVolunteerToEvent = async (volunteerId, eventId) => {
-  const matchedVolunteer = await prisma.volunteerHistory.create({
-    data: {
-      volunteerId: volunteerId,
-      eventId: eventId,
-      participationStatus: 'matched', // Assuming you want to set an initial status
-    },
-  });
-  return matchedVolunteer;
-};
+export const findMatchingVolunteers = async (eventId) => {
+  // Ensure eventId is a valid integer
+  const parsedEventId = parseInt(eventId, 10);
+  if (isNaN(parsedEventId)) {
+    throw new Error(`Invalid event ID: ${eventId}`);
+  }
 
-// Find volunteers matching the event criteria
-const findMatchingVolunteers = async (eventId) => {
+  // Fetch the event details
   const event = await prisma.event.findUnique({
-    where: { id: eventId },
+    where: { id: parsedEventId },
   });
 
   if (!event) {
-    throw new Error('Event not found');
+    throw new Error(`Event with id ${parsedEventId} not found`);
   }
 
+  const { requiredSkills, location, eventDate } = event;
+
+  // Find volunteers that match the event's criteria
   const matchingVolunteers = await prisma.volunteer.findMany({
     where: {
       AND: [
-        { skills: { hasSome: event.requiredSkills } },
-        { state: event.location }
-      ]
-    }
+        {
+          skills: {
+            hasSome: requiredSkills,
+          },
+        },
+        {
+          state: location,
+        },
+        {
+          availability: {
+            hasSome: [eventDate.toISOString()],
+          },
+        },
+      ],
+    },
   });
 
   return matchingVolunteers;
 };
-
-export { matchVolunteerToEvent, findMatchingVolunteers };

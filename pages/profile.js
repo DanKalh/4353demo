@@ -1,3 +1,4 @@
+// pages/profile.js
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -130,7 +131,7 @@ const ProfilePage = () => {
           skills: Array.isArray(data.skills) ? data.skills : [],
           customSkill: '',
           preferences: data.preferences,
-          availability: data.availability,
+          availability: data.availability ? data.availability.map(date => new Date(date).toISOString().split('T')[0]) : [],
         });
         setSkillsOptions(skillsOptionsList.filter((skill) => !data.skills.includes(skill)));
         setLoading(false);
@@ -180,6 +181,16 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      availability: prevFormData.availability.includes(value)
+        ? prevFormData.availability.filter(date => date !== value)
+        : [...prevFormData.availability, value],
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -226,14 +237,14 @@ const ProfilePage = () => {
         <Link href="/events" legacyBehavior>
           <a style={styles.link}>View Events</a>
         </Link>
+        <Link href="/volunteer-matching" legacyBehavior>
+          <a style={styles.link}>Volunteer Matching</a>
+        </Link>
         <Link href="/event-management" legacyBehavior>
           <a style={styles.link}>Event Management</a>
         </Link>
-        <Link href="/history" legacyBehavior>
-          <a style={styles.link}>View History</a>
-        </Link>
-        <Link href="/volunteer-matching" legacyBehavior>
-          <a style={styles.link}>Volunteer Matching</a>
+        <Link href="/reports" legacyBehavior>
+          <a style={styles.link}>Generate Report</a>
         </Link>
       </div>
       <h1 style={styles.header}>User Profile</h1>
@@ -309,7 +320,14 @@ const ProfilePage = () => {
         </div>
         <div>
           <label>Availability:</label>
-          <input type="date" name="availability" value={formData.availability} onChange={handleChange} multiple required />
+          <input type="date" name="availability" onChange={handleDateChange} />
+          <div style={styles.selectedDates}>
+            {formData.availability.map(date => (
+              <div key={date} style={styles.date}>
+                {date}
+              </div>
+            ))}
+          </div>
         </div>
         <button type="submit">Update Profile</button>
         {updateStatus && <p>{updateStatus}</p>}
@@ -376,6 +394,17 @@ const styles = {
     borderRadius: '5px',
     color: 'black',
     transition: 'background-color 0.3s',
+  },
+  selectedDates: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '5px',
+    marginTop: '10px',
+  },
+  date: {
+    padding: '5px',
+    border: '1px solid #ccc',
+    borderRadius: '3px',
   },
 };
 
