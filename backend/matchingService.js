@@ -1,5 +1,4 @@
-//backend/matchingService.js:
-
+// backend/matchingService.js
 import prisma from '../lib/prisma';
 
 // Match a volunteer to an event
@@ -14,4 +13,26 @@ const matchVolunteerToEvent = async (volunteerId, eventId) => {
   return matchedVolunteer;
 };
 
-export { matchVolunteerToEvent }; 
+// Find volunteers matching the event criteria
+const findMatchingVolunteers = async (eventId) => {
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+  });
+
+  if (!event) {
+    throw new Error('Event not found');
+  }
+
+  const matchingVolunteers = await prisma.volunteer.findMany({
+    where: {
+      AND: [
+        { skills: { hasSome: event.requiredSkills } },
+        { state: event.location }
+      ]
+    }
+  });
+
+  return matchingVolunteers;
+};
+
+export { matchVolunteerToEvent, findMatchingVolunteers };

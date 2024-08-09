@@ -1,4 +1,3 @@
-// pages/history.js
 import React from 'react';
 import VolunteerHistoryTable from '../components/VolunteerHistoryTable';
 

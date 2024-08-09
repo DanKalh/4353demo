@@ -1,44 +1,41 @@
 // pages/api/events/index.js
-import prisma from '../../../lib/prisma';
-import authMiddleware from '../../../middleware/authMiddleware';
+import { createEvent, getAllEvents } from '../../../backend/eventService';
 
-const handler = async (req, res) => {
+export default async function handler(req, res) {
+  console.log(`${req.method} request to /api/events`);
+
   if (req.method === 'POST') {
-    await authMiddleware(req, res, async () => {
-      const { eventName, eventDescription, location, requiredSkills, urgency, eventDate } = req.body;
+    try {
+      const { eventName, eventDescription, requiredSkills, location, eventDate, urgency } = req.body;
 
-      try {
-        const event = await prisma.eventDetails.create({
-          data: {
-            eventName,
-            eventDescription,
-            location,
-            requiredSkills,
-            urgency,
-            eventDate: new Date(eventDate),
-          },
-        });
+      // Ensure requiredSkills is an array
+      const skillsArray = Array.isArray(requiredSkills) ? requiredSkills : requiredSkills.split(',').map(skill => skill.trim());
 
-        return res.status(201).json(event);
-      } catch (error) {
-        console.error('Error creating event:', error);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+      const eventData = {
+        eventName,
+        eventDescription,
+        requiredSkills: skillsArray,
+        location,
+        eventDate: new Date(eventDate),
+        urgency,
+      };
+
+      const newEvent = await createEvent(eventData);
+      return res.status(201).json(newEvent);
+    } catch (error) {
+      console.error('Error creating event:', error);
+      return res.status(500).json({ error: 'Error creating event' });
+    }
   } else if (req.method === 'GET') {
-    await authMiddleware(req, res, async () => {
-      try {
-        const events = await prisma.eventDetails.findMany();
-        return res.status(200).json(events);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-    });
-  } else {
-    res.setHeader('Allow', ['POST', 'GET']);
-    return res.status(405).json({ error: 'Method not allowed' });
+    try {
+      const events = await getAllEvents();
+      console.log('Fetched events:', events);
+      return res.status(200).json(events);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      return res.status(500).json({ error: 'Error fetching events' });
+    }
   }
-};
 
-export default handler;
+  res.status(405).json({ message: 'Method Not Allowed' });
+}

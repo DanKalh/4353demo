@@ -1,4 +1,3 @@
-// ../pages/profile.js
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -227,8 +226,14 @@ const ProfilePage = () => {
         <Link href="/events" legacyBehavior>
           <a style={styles.link}>View Events</a>
         </Link>
-        <Link href="/reports" legacyBehavior>
-          <a style={styles.link}>Generate Report</a>
+        <Link href="/event-management" legacyBehavior>
+          <a style={styles.link}>Event Management</a>
+        </Link>
+        <Link href="/history" legacyBehavior>
+          <a style={styles.link}>View History</a>
+        </Link>
+        <Link href="/volunteer-matching" legacyBehavior>
+          <a style={styles.link}>Volunteer Matching</a>
         </Link>
       </div>
       <h1 style={styles.header}>User Profile</h1>

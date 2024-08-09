@@ -3,8 +3,13 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/profile": "pages/profile.js",
+  "/volunteer-matching": "pages/volunteer-matching.js",
+  "/events": "pages/events.js",
+  "/api/matching": "pages/api/matching.js",
+  "/": "pages/index.js",
+  "/api/events": "pages/api/events.js",
   "/event-management": "pages/event-management.js",
   "/api/users": "pages/api/users.js",
-  "/": "pages/index.js",
-  "/register": "pages/register.js"
+  "/history": "pages/history.js",
+  "/api/history": "pages/api/history.js"
 }

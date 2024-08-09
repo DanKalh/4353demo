@@ -30,21 +30,46 @@ model UserProfile {
   user         UserCredentials @relation(fields: [userId], references: [id])
 }
 
+model Event {
+  id              Int             @id @default(autoincrement())
+  eventName       String
+  eventDescription String
+  requiredSkills  String[]
+  location        String
+  eventDate       DateTime
+  urgency         String
+  volunteerHistory VolunteerHistory[]
+  eventDetails    EventDetails[]
+}
+
 model EventDetails {
   id               Int      @id @default(autoincrement())
-  eventName        String
-  eventDescription String
-  location         String
-  requiredSkills   Json
-  urgency          String
-  eventDate        DateTime
+  eventId          Int
+  detail           String
+  event            Event @relation(fields: [eventId], references: [id])
+}
+
+model Volunteer {
+  id          Int              @id @default(autoincrement())
+  fullName    String
+  address1    String
+  address2    String?
+  city        String
+  state       String
+  zipCode     String
+  skills      String[]
+  preferences String?
+  availability String?
+  history     VolunteerHistory[]
 }
 
 model VolunteerHistory {
-  id                   Int      @id @default(autoincrement())
-  volunteerId          Int
-  eventId              Int
-  participationStatus  String
+  id               Int      @id @default(autoincrement())
+  volunteerId      Int
+  eventId          Int
+  participationStatus String
+  volunteer        Volunteer @relation(fields: [volunteerId], references: [id])
+  event            Event     @relation(fields: [eventId], references: [id])
 }
 
 model Notifications {

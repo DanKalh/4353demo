@@ -1,17 +1,21 @@
 // pages/api/matching/index.js
-import matchingService from '../../../backend/matchingService';
-import validate from '../../../middleware/validation';
+import { findMatchingVolunteers } from '../../../backend/matchingService';
 
 export default async function handler(req, res) {
   console.log(`${req.method} request to /api/matching`);
 
   if (req.method === 'POST') {
-    await validate(req, res);
-    const { volunteer_id, event_id } = req.body;
-    const result = await matchingService.matchVolunteer(volunteer_id, event_id);
-    console.log('Match created:', result);
-    return res.status(201).json(result);
+    try {
+      const { eventId } = req.body;
+
+      const volunteers = await findMatchingVolunteers(eventId);
+      console.log('Matching volunteers found:', volunteers);
+      return res.status(200).json(volunteers);
+    } catch (error) {
+      console.error('Error matching volunteers:', error);
+      return res.status(500).json({ error: 'Error matching volunteers' });
+    }
   }
 
-  res.status(405).json({ message: 'Not allowed' });
+  res.status(405).json({ message: 'Method Not Allowed' });
 }

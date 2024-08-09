@@ -32,15 +32,25 @@
       "static/chunks/main.js",
       "static/chunks/pages/event-management.js"
     ],
+    "/events": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/events.js"
+    ],
+    "/history": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/history.js"
+    ],
     "/profile": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/profile.js"
     ],
-    "/register": [
+    "/volunteer-matching": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/register.js"
+      "static/chunks/pages/volunteer-matching.js"
     ]
   },
   "ampFirstPages": []
